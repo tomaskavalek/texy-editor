@@ -1,0 +1,16 @@
+texy-editor + mPDF
+--------------------------------------------------------------------------------
+
+Info
+====
+
+- zalozeno na texy-editor od Davida Grudla (https://github.com/dg/texy-editor)
+- ke sve funkci vyzaduje mPDF (http://mpdf.bpm1.com/) - neni soucasti
+	- umisteni knihovny mPDF je zrejme pri pohledu do kodu
+
+Priklad pouziti
+===============
+
+Napriklad pro rychle generovani PDF pri znalosti Texy syntaxe a vhodnem 
+ostylovani dokumentu. Upraven blockHandler - zdrojovy kod obarvovany pomoci 
+fshl neni uzavren v tagu <pre>, ale <p>. Cinilo to potize.
