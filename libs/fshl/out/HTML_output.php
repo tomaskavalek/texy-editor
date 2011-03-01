@@ -3,7 +3,7 @@
  * FastSHL                              | Universal Syntax HighLighter |
  * ---------------------------------------------------------------------
 
-   Copyright (C) 2002-2005  Juraj 'hvge' Durech
+   Copyright (C) 2002-2003  Juraj 'hvge' Durech
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -20,21 +20,21 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
    
  * ---------------------------------------------------------------------
- * HTML_UTF8_output.php		STANDARD HTML output module with UTF-8 encoding
+ * HTML_output.php		STANDARD HTML output module
  */
 
-class HTML_UTF8_output
+class HTML_output
 {
 	var $last_class;
 	
-	function HTML_UTF8_output() 
+	function HTML_output() 
 	{
 		$this->last_class = null;
 	}
-	
+		
 	function template ($word, $class)
 	{
-		$word = htmlEntities($word, ENT_COMPAT, 'UTF-8');
+		$word = htmlentities($word);
 
 		if ($this->last_class == $class)
 		{
@@ -63,9 +63,11 @@ class HTML_UTF8_output
 		}
 	}
 
+	// default keyword is the same as template(), but you can add your own
+	// postprocess. 
 	function keyword ($word, $class)
 	{
-		$word = htmlEntities($word, ENT_COMPAT, 'UTF-8');
+		$word = htmlentities($word);
 
 		if ($this->last_class == $class)
 		{
@@ -81,8 +83,9 @@ class HTML_UTF8_output
 			$this->last_class = $class;
 			if($class == null) return '</span>'.$word;
 			return '</span><span class="'.$class.'">'.$word;
-		}	
+		}		
 	}
+
 
 } //END class HTML_output
 

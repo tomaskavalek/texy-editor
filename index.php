@@ -3,6 +3,7 @@
 require dirname(__FILE__) . '/libs/texy.min.php';
 require dirname(__FILE__) . '/libs/fshl/fshl.php';
 require dirname(__FILE__) . '/libs/MyTexy.php';
+require dirname(__FILE__) . '/libs/mpdf/mpdf.php';
 
 header('Content-Type: text/html; charset=utf-8');
 
@@ -31,6 +32,23 @@ if (isset($_POST['text'])) { // vystup pro AJAX
 	$text = @$_SESSION['text'];
 }
 
+if(isset($_GET['pdf'])) {
+	$mpdf = new mPDF(); 
+	
+	// CSS
+	$stylesheet = file_get_contents('css/libs/reset.css');
+	$mpdf->WriteHTML($stylesheet, 1);
+	$stylesheet = file_get_contents('css/libs/classes.css');
+	$mpdf->WriteHTML($stylesheet, 1);
+	$stylesheet = file_get_contents('css/libs/fshl.css');
+	$mpdf->WriteHTML($stylesheet, 1);
+	$stylesheet = file_get_contents('css/screen.css');
+	$mpdf->WriteHTML($stylesheet, 1);
+	
+	$mpdf->WriteHTML($texy->process($text));
+	$mpdf->Output();
+	exit;
+}
 
 ?><html lang="en">
 <head>
@@ -98,11 +116,11 @@ if (isset($_POST['text'])) { // vystup pro AJAX
 	</head>
 
 	<body>
-		<h1>Texy AJAX Editor <small id="counter"></small></h1>
+		<h1>Texy AJAX Editor <small id="counter"></small> <a href="?pdf=true" title="PDF">PDF</a></h1>
 
-		<textarea name="text"><?= htmlSpecialChars($text) ?></textarea>
+		<textarea name="text"><?php echo htmlSpecialChars($text); ?></textarea>
 
-		<div id="output"><?= $texy->process($text) ?></div>
+		<div id="output"><?php echo $texy->process($text); ?></div>
 
 		<p id="help" rel="htmltooltip">?</p>
 

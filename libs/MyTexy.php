@@ -88,20 +88,20 @@ class MyTexy extends Texy
 		if ($blocktype !== 'block/code') {
 			return $invocation->proceed();
 		}
-
+		
 		$lang = strtoupper($lang);
 		if ($lang == 'JAVASCRIPT') $lang = 'JS';
 
 		$parser = new fshlParser('HTML_UTF8', P_TAB_INDENT);
-		if (!$parser->isLanguage($lang)) {
+		if ((!$parser->isLanguage($lang)) && ($lang != '')) {
 			return $invocation->proceed();
 		}
 
 		$content = Texy::outdent($content);
 		$content = $parser->highlightString($lang, $content);
-		$content = $this->protect($content, Texy::CONTENT_BLOCK);
+		$content = $this->protect(preg_replace('#\n#', '<br />', $content), Texy::CONTENT_BLOCK);
 
-		$elPre = TexyHtml::el('pre');
+		$elPre = TexyHtml::el('p');
 		if ($modifier) $modifier->decorate($this, $elPre);
 		$elPre->attrs['class'] = strtolower($lang);
 

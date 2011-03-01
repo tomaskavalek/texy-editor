@@ -3,7 +3,7 @@
  * FastSHL                              | Universal Syntax HighLighter |
  * ---------------------------------------------------------------------
 
-   Copyright (C) 2002-2005  Juraj 'hvge' Durech
+   Copyright (C) 2002-2003  Juraj 'hvge' Durech
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -20,21 +20,34 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
    
  * ---------------------------------------------------------------------
- * HTML_UTF8_output.php		STANDARD HTML output module with UTF-8 encoding
+ * XML output module
+ *
+ * <fshl>
+ *  <class>...</class>
+ *  <data>...</data>
+ * </fshl>
+ *
+ * TODO: fix cross language bug
  */
 
-class HTML_UTF8_output
+class XML_output
 {
 	var $last_class;
+	var $istext;
 	
-	function HTML_UTF8_output() 
+	function XML_output() 
 	{
-		$this->last_class = null;
+		$this->last_class="normal";
+		$this->istext=0;
 	}
 	
 	function template ($word, $class)
 	{
-		$word = htmlEntities($word, ENT_COMPAT, 'UTF-8');
+		$word=htmlentities($word);
+		$this->istext=0;
+		
+		if($class == null)
+			$class = "normal";
 
 		if ($this->last_class == $class)
 		{
@@ -42,22 +55,21 @@ class HTML_UTF8_output
 		}
 		else
 		{
-			if($this->last_class == null)
+			if($this->last_class == "normal")
 			{
-				$this->last_class = $class;
-				return '<span class="'.$class.'">'.$word;
+				$this->last_class=$class;
+				return "<fshl>\n <class>$class</class>\n <data>".$word;
 			}
-			$this->last_class = $class;
-			if($class == null) return '</span>'.$word;
-			return '</span><span class="'.$class.'">'.$word;
+			$this->last_class=$class;
+			return "</data>\n</fshl>\n<fshl>\n <class>$class</class>\n <data>".$word;
 		}	
 	}
 
 	function template_end()
 	{
-		if($this->last_class != null) {
-			$this->last_class = null;
-			return '</span>';
+		if($this->istext) {
+			$this->last_class="normal";
+			return "</data>\n</fshl>";
 		} else {
 			return null;
 		}
@@ -65,7 +77,11 @@ class HTML_UTF8_output
 
 	function keyword ($word, $class)
 	{
-		$word = htmlEntities($word, ENT_COMPAT, 'UTF-8');
+		$word=htmlentities($word);
+		$this->istext=0;
+		
+		if($class == null)
+			$class = "normal";
 
 		if ($this->last_class == $class)
 		{
@@ -73,17 +89,16 @@ class HTML_UTF8_output
 		}
 		else
 		{
-			if($this->last_class == null)
+			if($this->last_class == "normal")
 			{
-				$this->last_class = $class;
-				return '<span class="'.$class.'">'.$word;
+				$this->last_class=$class;
+				return "<fshl>\n <class>$class</class>\n <data>".$word;
 			}
-			$this->last_class = $class;
-			if($class == null) return '</span>'.$word;
-			return '</span><span class="'.$class.'">'.$word;
+			$this->last_class=$class;
+			return "</data>\n</fshl>\n<fshl>\n <class>$class</class>\n <data>".$word;
 		}	
 	}
 
-} //END class HTML_output
+} //END class XML_output
 
 ?>
